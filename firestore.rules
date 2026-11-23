@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Fingerprints: any signed-in device can read; writes must match the allowlisted shape.
+    match /fingerprints/{id} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['schema_version','equipment_type','process','symptoms',
+             'trigger','cause_category','status','downtime_bucket','safety_flag','site_token',
+             'owner','created_at'])
+        && request.resource.data.schema_version == '1.0'
+        && request.resource.data.owner == request.auth.uid;
+      allow update, delete: if false;
+    }
+    // Knowledge cards: read by all signed-in devices; written by the cloud analysis step (Day 3).
+    match /knowledge_cards/{id} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+  }
+}

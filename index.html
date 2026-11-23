@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShiftSense — Operator</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">ShiftSense <span>operator</span></div>
+    <div class="header-right">
+      <span id="poolInfo" class="muted"></span>
+      <div id="net" class="pill">online</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card" id="setup">
+      <h2>1 · Prepare on-device model</h2>
+      <p class="muted">Downloads Gemini Nano once. Raw notes are processed only on this device.</p>
+      <button id="prepare">Prepare model</button>
+      <span id="progress" class="muted"></span>
+    </section>
+
+    <section class="card">
+      <h2>2 · Shift note</h2>
+      <div class="row">
+        <label>Machine <input id="machine" value="P-104" /></label>
+        <label>Shift <select id="shift"><option>Night</option><option>Day</option><option>Evening</option></select></label>
+      </div>
+      <textarea id="note" rows="5">Press started vibrating after die change. Pressure dropped twice around 2 AM. Raj checked the filter but didn't find anything. Lost 42 minutes of production. Problem still not resolved.</textarea>
+      <button id="extract" disabled>Structure on-device</button>
+      <div id="badge"></div>
+    </section>
+
+    <section class="card hidden" id="result">
+      <h2>3 · What stays vs. what leaves</h2>
+      <div id="corrections" class="hidden"></div>
+      <div class="split">
+        <div>
+          <h3>🔒 Private (stays on device)</h3>
+          <pre id="private"></pre>
+        </div>
+        <div>
+          <h3>🌐 Fingerprint (shareable)</h3>
+          <pre id="fingerprint"></pre>
+        </div>
+      </div>
+      <button id="approve">Approve & share fingerprint</button>
+      <span id="shareStatus" class="muted"></span>
+    </section>
+
+    <section class="card hidden" id="matchesCard">
+      <h2>4 · Similar incidents across plants <span class="muted small">(matched on-device, no AI, works offline)</span></h2>
+      <div id="matches"></div>
+    </section>
+
+    <section class="card">
+      <h2>Inference log</h2>
+      <ul id="log"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
