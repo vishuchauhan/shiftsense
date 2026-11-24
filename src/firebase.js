@@ -24,7 +24,8 @@ const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfETC8uAAAAADXAWAB4pfbijjRj7wJkjEOY-rEa"
 // In local dev, App Check prints a debug token in the console.
 // Register it in Firebase console → App Check → Apps → ⋮ → Manage debug tokens.
 if (location.hostname === "localhost") {
-  self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  // Fixed token from .env.local (never committed), so clearing browser data does not create a new one.
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_APPCHECK_DEBUG_TOKEN || true;
 }
 
 export const app = initializeApp(firebaseConfig);

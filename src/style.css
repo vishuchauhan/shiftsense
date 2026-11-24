@@ -34,3 +34,27 @@ pre { background:#f3f4f6; padding:12px; border-radius:8px; font-size:12px; overf
 .match:first-child { border-top:0; }
 .score { min-width:56px; text-align:center; font-weight:700; font-size:18px; color:var(--on);
   border:1px solid var(--on); border-radius:8px; padding:6px 4px; }
+main.wide { max-width:1100px; }
+.navlink { color:var(--cloud); text-decoration:none; font-size:14px; }
+.btnrow { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0; }
+button.ghost { background:#fff; color:var(--ink); border:1px solid var(--line); }
+.cluster { padding:12px 0; border-top:1px solid var(--line); }
+.cluster:first-child { border-top:0; }
+.cluster-head { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; align-items:center; }
+.chip { font-family:ui-monospace, monospace; font-size:12px; padding:2px 8px; border-radius:6px; background:#f3f4f6; border:1px solid var(--line); }
+.chip.ok { background:#e9f7ef; border-color:#bfe5cf; color:#0b6b3a; }
+.chip.bad { background:#fdecea; border-color:#f5c2bd; color:var(--off); text-decoration:line-through; }
+details summary { cursor:pointer; margin-top:4px; }
+.kcard { border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:14px; }
+.kcard.rejected { border-color:var(--off); opacity:.8; }
+.kcard-head { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.kcard-head h3 { margin:0; font-size:16px; flex:1; }
+.kid { font-family:ui-monospace, monospace; font-size:12px; color:var(--muted); }
+.kstats { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:12px 0; }
+.kstats div { background:#f6f7f9; border-radius:8px; padding:8px; text-align:center; }
+.kstats b { display:block; font-size:20px; } .kstats span { font-size:12px; color:var(--muted); }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:14px; }
+.two ol, .two ul { margin:6px 0; padding-left:18px; }
+@media (max-width:700px) { .two, .kstats { grid-template-columns:1fr 1fr; } }
+.chip.live { background:#eef4ff; border-color:#c9dafc; color:var(--cloud); }

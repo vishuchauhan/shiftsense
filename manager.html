@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShiftSense — Network</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">ShiftSense <span>network</span></div>
+    <div class="header-right">
+      <a href="/" class="navlink">Operator →</a>
+      <span id="poolInfo" class="muted"></span>
+      <div id="net" class="pill">online</div>
+    </div>
+  </header>
+
+  <main class="wide">
+    <section class="card">
+      <h2>Shared network</h2>
+      <p class="muted">Only approved fingerprints are here. No raw notes, names or machine IDs ever reach this page or the cloud.</p>
+      <div class="btnrow">
+        <button id="seed" class="ghost">Load demo network (45 incidents · 3 plants)</button>
+        <button id="analyse">1 · Find recurring patterns (code)</button>
+        <button id="cards" disabled>2 · Write knowledge cards (cloud Gemini)</button>
+      </div>
+      <span id="status" class="muted"></span>
+    </section>
+
+    <section class="card hidden" id="clustersCard">
+      <h2>Recurring patterns found by code <span class="muted small">(similarity clustering, no AI)</span></h2>
+      <div id="clusters"></div>
+    </section>
+
+    <section class="card">
+      <h2>Knowledge cards <span class="muted small">(numbers by code · text by cloud Gemini · every citation verified)</span></h2>
+      <div id="cardsList"><p class="muted">No cards yet.</p></div>
+    </section>
+
+    <section class="card">
+      <h2>Inference log</h2>
+      <ul id="log"></ul>
+    </section>
+  </main>
+
+  <script type="module" src="/src/manager.js"></script>
+</body>
+</html>

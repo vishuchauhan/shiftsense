@@ -3,7 +3,7 @@ import { getAI, getGenerativeModel, GoogleAIBackend, InferenceMode, Schema } fro
 import { app } from "./firebase.js";
 import { VOCAB as ALLOWED } from "./privacy.js";
 
-const ai = getAI(app, { backend: new GoogleAIBackend() });
+export const ai = getAI(app, { backend: new GoogleAIBackend() });
 
 // ---------- Schema for on-device extraction ----------
 const incidentSchema = Schema.object({
@@ -50,7 +50,7 @@ export const shareableModel = getGenerativeModel(ai, { mode: InferenceMode.PREFE
 
 // ---------- Telemetry ----------
 export const telemetry = [];
-async function timed(task, model, prompt) {
+export async function timed(task, model, prompt) {
   const t0 = performance.now();
   const result = await model.generateContent(prompt);
   const ms = Math.round(performance.now() - t0);

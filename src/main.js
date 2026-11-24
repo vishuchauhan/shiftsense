@@ -3,6 +3,12 @@ import { verifyIncident, buildFingerprint, getSiteToken, isValidShared } from ".
 import { savePrivateIncident, shareFingerprint, watchFingerprints } from "./store.js";
 import { topMatches } from "./matching.js";
 
+
+// ---- Show any error on screen (debug aid) ----
+const showErr = (msg) => { const el = document.getElementById("status") || document.getElementById("badge"); if (el) el.textContent = "❌ " + msg; console.error(msg); };
+addEventListener("error", (e) => showErr(e.message));
+addEventListener("unhandledrejection", (e) => showErr(e.reason?.message || String(e.reason)));
+
 const $ = (id) => document.getElementById(id);
 let current = null;
 let pool = [];
@@ -114,7 +120,7 @@ function renderMatches() {
       return `<div class="match">
         <div class="score">${Math.round(score * 100)}%</div>
         <div>
-          <div><b>${item.equipment_type.replace(/_/g, " ")}</b> · ${item.symptoms.join(", ")} · after ${item.trigger.replace(/_/g, " ")}</div>
+          <div><b>${item.equipment_type.replace(/_/g, " ")}</b> · ${item.symptoms.join(", ")} · ${String(item.trigger).startsWith("after_") ? item.trigger.replace(/_/g, " ") : "after " + item.trigger.replace(/_/g, " ")}</div>
           <div class="muted small">${where} · status ${item.status} · cause ${item.cause_category} · downtime ${item.downtime_bucket}${item.pending ? " · ⏳ not synced yet" : ""}</div>
           <div class="muted small">equipment ${parts.equipment ? "✓" : "✗"} · symptoms ${Math.round(parts.symptoms * 100)}% · trigger ${parts.trigger ? "✓" : "✗"} · process ${parts.process ? "✓" : "✗"}</div>
         </div>
