@@ -47,3 +47,51 @@ export function watchFingerprints(callback) {
   });
   return () => unsub();
 }
+
+export function clearPrivateIncidents() {
+  localStorage.removeItem(LOCAL_KEY);
+}
+
+// ---------- Drafts (local only) ----------
+const DRAFT_KEY = "ss_draft";
+export const loadDraft = () => { try { return JSON.parse(localStorage.getItem(DRAFT_KEY)) || null; } catch { return null; } };
+export const saveDraft = (d) => localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...d, at: Date.now() }));
+export const clearDraft = () => localStorage.removeItem(DRAFT_KEY);
+
+// ---------- Knowledge reuse events ----------
+// One event per (card, site): the document ID is `${cardId}__${site}` and rules forbid updates,
+// so a site cannot record the same reuse twice.
+export async function recordReuse(cardId, siteToken, { synthetic = false } = {}) {
+  await authReady.catch(() => {});
+  const id = `${cardId}__${siteToken}`;
+  const write = setDoc(doc(db, "reuse_events", id), {
+    card_id: cardId,
+    site_token: siteToken,
+    synthetic,
+    owner: auth.currentUser?.uid ?? null,
+    created_at: serverTimestamp(),
+  });
+  return { id, write };
+}
+
+export function watchReuse(callback) {
+  let unsub = () => {};
+  authReady.catch(() => {}).finally(() => {
+    unsub = onSnapshot(
+      collection(db, "reuse_events"),
+      (snap) => callback(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
+      (err) => console.warn("reuse watch:", err.message)
+    );
+  });
+  return () => unsub();
+}
+
+// ---------- Blocked / rejected events (local audit log) ----------
+const BLOCK_KEY = "ss_blocked";
+export const loadBlocked = () => { try { return JSON.parse(localStorage.getItem(BLOCK_KEY)) || []; } catch { return []; } };
+export function logBlocked(kind, detail) {
+  const all = loadBlocked();
+  all.push({ kind, detail: String(detail).slice(0, 240), at: Date.now() });
+  localStorage.setItem(BLOCK_KEY, JSON.stringify(all.slice(-100)));
+}
+export const clearBlocked = () => localStorage.removeItem(BLOCK_KEY);

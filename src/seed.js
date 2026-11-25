@@ -28,3 +28,26 @@ export async function seedDemoNetwork(onProgress) {
   }
   return { written, skipped };
 }
+
+/**
+ * Synthetic reuse events for the demo: each verified card is marked as reused by the demo plants
+ * that did NOT contribute most of its incidents. Every event is stored with synthetic: true.
+ */
+export async function seedDemoReuse(cards, recordReuse) {
+  const sites = Object.keys(DEMO.sites);
+  let n = 0;
+  for (const card of cards) {
+    const ids = new Set(card.all_evidence_ids || []);
+    const counts = {};
+    DEMO.incidents.filter((r) => ids.has(r.id)).forEach((r) => (counts[r.site_token] = (counts[r.site_token] || 0) + 1));
+    const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0];
+    for (const s of sites.filter((x) => x !== top)) {
+      try {
+        const { write } = await recordReuse(card.id, s, { synthetic: true });
+        await write;
+        n++;
+      } catch { /* already recorded */ }
+    }
+  }
+  return n;
+}

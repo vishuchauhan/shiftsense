@@ -1,13 +1,14 @@
 import { defineConfig } from "vite";
 import { resolve } from "path";
 
-// Two pages: operator (index.html) and network/manager (manager.html).
 export default defineConfig({
   build: {
+    target: "es2022",
+    chunkSizeWarningLimit: 2000,
     rollupOptions: {
       input: {
-        operator: resolve(__dirname, "index.html"),
-        manager: resolve(__dirname, "manager.html"),
+        main: resolve(__dirname, "index.html"),
+        manager: resolve(__dirname, "manager.html"), // legacy URL, redirects to #/network
       },
     },
   },

@@ -1,6 +1,6 @@
 // Firebase setup: App, App Check, Auth, Firestore (offline-first).
 import { initializeApp } from "firebase/app";
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from "firebase/app-check";
 import { getAuth, signInAnonymously } from "firebase/auth";
 import {
   initializeFirestore,
@@ -25,20 +25,31 @@ const RECAPTCHA_ENTERPRISE_SITE_KEY = "6LfETC8uAAAAADXAWAB4pfbijjRj7wJkjEOY-rEa"
 // Register it in Firebase console → App Check → Apps → ⋮ → Manage debug tokens.
 if (location.hostname === "localhost") {
   // Fixed token from .env.local (never committed), so clearing browser data does not create a new one.
-  self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env.VITE_APPCHECK_DEBUG_TOKEN || true;
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = import.meta.env?.VITE_APPCHECK_DEBUG_TOKEN || true;
 }
 
 export const app = initializeApp(firebaseConfig);
 
-initializeAppCheck(app, {
+export const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_ENTERPRISE_SITE_KEY),
   isTokenAutoRefreshEnabled: true,
 });
 
 export const auth = getAuth(app);
-export const authReady = signInAnonymously(auth);
+// Offline start-up must not raise an error: sign-in completes when the connection returns.
+export const authReady = signInAnonymously(auth).catch((e) => { console.warn("sign-in pending:", e.code || e.message); return null; });
+addEventListener("online", () => { if (!auth.currentUser) signInAnonymously(auth).catch(() => {}); });
 
 // Persistent cache: writes made offline are queued and synced automatically on reconnect.
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });
+/** Observable App Check status: tries to obtain a token (does not reveal it). */
+export async function appCheckStatus() {
+  try {
+    const t = await getToken(appCheck, false);
+    return t?.token ? "ok" : "error";
+  } catch (e) {
+    return "error";
+  }
+}

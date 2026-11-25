@@ -58,8 +58,14 @@ export function verifyIncident(raw, note) {
     else if (!hasAny(text, VOCAB.fix_keywords)) fix("resolution_category", "none", "note does not say what fixed it");
   }
 
-  // Safety: decided by explicit keywords in the note, not by the model.
-  fix("safety_flag", hasAny(text, VOCAB.safety_keywords), "safety is set only by explicit safety words in the note");
+  // Safety: decided by explicit words in the note, not by the model.
+  // Three states: flagged / explicitly no safety concern / not stated. "Not stated" is NOT treated as safe.
+  // Remove negated phrases ("no injuries") first, so "no one hurt, but smoke from motor" is still flagged.
+  const unnegated = VOCAB.safety_none_phrases.reduce((t, p) => t.split(p).join(" "), text);
+  const flagged = hasAny(unnegated, VOCAB.safety_keywords);
+  const explicitNone = !flagged && hasAny(text, VOCAB.safety_none_phrases);
+  fix("safety_flag", flagged, "safety is set only by explicit safety words in the note");
+  inc.safety_status = flagged ? "flagged" : explicitNone ? "explicitly_none" : "not_stated";
 
   // Downtime: if the note states a number, the number wins.
   const stated = parseDowntime(note);
@@ -138,4 +144,10 @@ export function isValidShared(item) {
   } catch {
     return false;
   }
+}
+
+/** Stable content key: identical fingerprints from the same site share a key (used for duplicate detection). */
+export function contentKey(fp) {
+  const keys = ["equipment_type", "process", "symptoms", "trigger", "cause_category", "status", "downtime_bucket", "resolution_category", "resolution_verified", "safety_flag", "site_token"];
+  return keys.map((k) => (Array.isArray(fp[k]) ? [...fp[k]].sort().join("+") : String(fp[k]))).join("|");
 }

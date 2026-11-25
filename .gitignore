@@ -3,3 +3,5 @@ dist/
 .firebase/
 *.log
 .env*
+!.env.example
+.fbcache*.tgz

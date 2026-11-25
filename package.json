@@ -1,13 +1,16 @@
 {
   "name": "shiftsense",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --import ./tests/register.mjs --test tests/suite.test.mjs",
+    "audit": "npm audit --omit=dev",
+    "deploy": "npm run test && npm run build && firebase deploy --only hosting,firestore:rules"
   },
   "dependencies": {
     "firebase": "^13.0.0"

@@ -2,7 +2,10 @@
 // Code decides which incidents belong together and computes every number; the model explains.
 // Any evidence ID the model cites that is not in the cluster is rejected.
 import { getGenerativeModel, InferenceMode, Schema } from "firebase/ai";
-import { doc, setDoc, collection, onSnapshot, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, collection, onSnapshot, serverTimestamp } from "firebase/firestore";
+import { checkCitations } from "./citations.js";
+import { POLICY } from "./routing.js";
+import { logBlocked } from "./store.js";
 import { ai, timed } from "./ai.js";
 import { db, authReady } from "./firebase.js";
 
@@ -19,32 +22,15 @@ const cardSchema = Schema.object({
 
 // Cross-plant reasoning needs the cloud; input is fingerprints only, so no fallback is needed.
 const cardModel = getGenerativeModel(ai, {
-  mode: InferenceMode.ONLY_IN_CLOUD,
+  mode: InferenceMode[POLICY.knowledge_card.mode],
   inCloudParams: {
     model: "gemini-3.5-flash-lite",
     generationConfig: { responseMimeType: "application/json", responseSchema: cardSchema, temperature: 0.2 },
   },
 });
 
-/** Exactly what is sent to the cloud for one cluster. Shown in the UI as privacy proof. */
-export function cloudPayload(cluster) {
-  return {
-    stats: cluster.stats,
-    signature: cluster.signature,
-    incidents: cluster.members.map((m) => ({
-      id: m.id,
-      site: m.site_token,
-      symptoms: m.symptoms,
-      trigger: m.trigger,
-      status: m.status,
-      confirmed_cause: m.cause_category,
-      downtime: m.downtime_bucket,
-      fix: m.resolution_category,
-      fix_verified: m.resolution_verified,
-      safety_flag: m.safety_flag,
-    })),
-  };
-}
+export { cloudPayload } from "./payload.js";
+import { cloudPayload } from "./payload.js";
 
 function buildPrompt(cluster) {
   return `You are a reliability engineer reviewing a recurring failure pattern found across several manufacturing plants.
@@ -65,21 +51,26 @@ DATA:
 ${JSON.stringify(cloudPayload(cluster))}`;
 }
 
-/** Ask the cloud for a card, then verify every citation against the cluster. */
+/** Every cloud request payload is logged locally so the Privacy Center can show exactly what left the device. */
+const OUTBOUND_KEY = "ss_outbound";
+export function loadOutbound() {
+  try { return JSON.parse(localStorage.getItem(OUTBOUND_KEY)) || []; } catch { return []; }
+}
+function logOutbound(task, payload) {
+  const all = loadOutbound();
+  all.push({ task, at: Date.now(), payload });
+  localStorage.setItem(OUTBOUND_KEY, JSON.stringify(all.slice(-20)));
+}
+
+/** Ask the cloud for a card, then verify every citation against the pattern (Level 1). */
 export async function generateCard(cluster) {
+  logOutbound("knowledge_card", cloudPayload(cluster));
   const text = await timed("knowledge_card", cardModel, buildPrompt(cluster));
   const card = JSON.parse(text);
-  const allowed = new Set(cluster.evidence_ids);
-  const cited = [...new Set(card.evidence_ids || [])];
-  const valid = cited.filter((id) => allowed.has(id));
-  const invalid = cited.filter((id) => !allowed.has(id));
-  const verification = {
-    cited: cited.length,
-    valid: valid.length,
-    invalid_refs: invalid,
-    status: invalid.length === 0 && valid.length > 0 ? "verified" : "rejected",
-  };
-  return { ...card, evidence_ids: valid, verification };
+  const check = checkCitations(card.evidence_ids, cluster.evidence_ids);
+  if (check.status !== "verified") logBlocked("card_citations_rejected", `${cardId(cluster)}: invalid ${check.invalid_refs.join(", ") || "no citations"}`);
+  const { validIds, ...verification } = check;
+  return { ...card, evidence_ids: validIds, verification };
 }
 
 export function cardId(cluster) {
@@ -87,26 +78,42 @@ export function cardId(cluster) {
   return `KC-${s.equipment_type}-${s.trigger}`.replace(/_/g, "-");
 }
 
-/** Store the card. Numbers come from code (cluster.stats), text from the model. */
+/** Store the card. Numbers come from code (cluster.stats), text from the model. Each regeneration bumps the version. */
 export async function saveCard(cluster, card) {
   await authReady.catch(() => {});
   const id = cardId(cluster);
-  await setDoc(doc(db, "knowledge_cards", id), {
+  const ref = doc(db, "knowledge_cards", id);
+  let version = 1;
+  try {
+    const prev = await getDoc(ref);
+    if (prev.exists()) version = (prev.data().version || 1) + 1;
+  } catch { /* offline: start at 1 */ }
+  await setDoc(ref, {
     id,
+    version,
     title: card.title,
     pattern_summary: card.pattern_summary,
     likely_mechanism: card.likely_mechanism,
     suggested_first_checks: card.suggested_first_checks,
     open_questions: card.open_questions,
-    evidence: cluster.evidence,
     cited_ids: card.evidence_ids,
     all_evidence_ids: cluster.evidence_ids,
     verification: card.verification,
     stats: cluster.stats,
+    evidence: cluster.evidence,
     signature: cluster.signature,
+    review_status: "generated", // generated → reviewed → approved (human decisions only)
+    review_note: "",
+    generated_by: "cloud_gemini",
     updated_at: serverTimestamp(),
   });
   return id;
+}
+
+/** Level 3: a person records review. Generated text is never treated as an approved procedure automatically. */
+export async function setCardReview(id, status, note = "") {
+  if (!["generated", "reviewed", "approved"].includes(status)) throw new Error("bad review status");
+  await updateDoc(doc(db, "knowledge_cards", id), { review_status: status, review_note: String(note).slice(0, 300), reviewed_at: serverTimestamp() });
 }
 
 export function watchCards(callback) {

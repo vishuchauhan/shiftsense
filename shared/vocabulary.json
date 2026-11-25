@@ -140,5 +140,18 @@
     "realigned",
     "swapped",
     "lubricated"
+  ],
+  "safety_none_phrases": [
+    "no injur",
+    "nobody hurt",
+    "no one hurt",
+    "no one was hurt",
+    "nobody was hurt",
+    "no safety",
+    "not a safety",
+    "no near miss",
+    "no near-miss",
+    "safe to run",
+    "no hazard"
   ]
 }

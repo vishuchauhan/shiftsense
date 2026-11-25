@@ -1,22 +1,44 @@
 rules_version = '2';
+// ShiftSense Firestore rules (demo deployment).
+// Production note: replace anonymous-auth checks with organisation membership and reviewer roles.
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Fingerprints: any signed-in device can read; writes must match the allowlisted shape.
+
+    function signedIn() { return request.auth != null; }
+
+    // Fingerprints: immutable, owner-bound, allowlisted fields only.
     match /fingerprints/{id} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null
+      allow read: if signedIn();
+      allow create: if signedIn()
         && request.resource.data.keys().hasOnly(['schema_version','equipment_type','process','symptoms',
              'trigger','cause_category','status','downtime_bucket','resolution_category','resolution_verified',
-             'safety_flag','site_token',
-             'owner','created_at'])
+             'safety_flag','site_token','owner','created_at'])
         && request.resource.data.schema_version == '1.1'
-        && request.resource.data.owner == request.auth.uid;
+        && request.resource.data.site_token is string && request.resource.data.site_token.matches('site_[a-z0-9]{8}')
+        && request.resource.data.symptoms is list && request.resource.data.symptoms.size() <= 11
+        && request.resource.data.resolution_verified is bool && request.resource.data.safety_flag is bool
+        && request.resource.data.owner == request.auth.uid
+        && request.resource.data.created_at == request.time;
       allow update, delete: if false;
     }
-    // Knowledge cards: read by all signed-in devices; written by the cloud analysis step (Day 3).
+
+    // Knowledge cards: written by the cloud-card step; review fields are updated by reviewers.
     match /knowledge_cards/{id} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
+      allow read: if signedIn();
+      allow create, update: if signedIn() && id.matches('KC-[a-z0-9-]+');
+      allow delete: if false;
+    }
+
+    // Reuse events: one per (card, site), immutable. The document ID must be `${card_id}__${site_token}`.
+    match /reuse_events/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['card_id','site_token','synthetic','owner','created_at'])
+        && id == request.resource.data.card_id + '__' + request.resource.data.site_token
+        && request.resource.data.synthetic is bool
+        && request.resource.data.owner == request.auth.uid
+        && request.resource.data.created_at == request.time;
+      allow update, delete: if false;
     }
   }
 }
