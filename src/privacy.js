@@ -4,7 +4,7 @@ import VOCAB from "../shared/vocabulary.json";
 
 export { VOCAB };
 export const SCHEMA_VERSION = VOCAB.schema_version;
-const ENUM_KEYS = ["equipment_type", "process", "symptoms", "trigger", "cause_category", "status", "downtime_bucket"];
+const ENUM_KEYS = ["equipment_type", "process", "symptoms", "trigger", "cause_category", "status", "downtime_bucket", "resolution_category"];
 
 const pick = (value, list) =>
   list.includes(value) ? value : list.includes("other") ? "other" : "unknown";
@@ -37,8 +37,9 @@ export function verifyIncident(raw, note) {
     }
   };
 
+  if (inc.resolution_category == null) inc.resolution_category = "none";
   // Enums: anything outside the vocabulary becomes other/unknown.
-  for (const key of ["equipment_type", "trigger", "cause_category", "status"]) {
+  for (const key of ["equipment_type", "trigger", "cause_category", "status", "resolution_category"]) {
     fix(key, pick(inc[key], VOCAB[key]), "value not in vocabulary");
   }
   const cleanSymptoms = [...new Set((inc.symptoms || []).map((s) => pick(s, VOCAB.symptoms)))].sort();
@@ -49,6 +50,12 @@ export function verifyIncident(raw, note) {
   // Cause: only allowed if the note says the cause was actually found.
   if (inc.cause_category !== "unknown" && !hasAny(text, VOCAB.cause_confirmation_keywords)) {
     fix("cause_category", "unknown", "note does not say a cause was confirmed");
+  }
+
+  // Resolution: only if the problem is resolved AND the note says what was done.
+  if (inc.resolution_category !== "none") {
+    if (inc.status !== "resolved") fix("resolution_category", "none", "a fix only counts once the problem is resolved");
+    else if (!hasAny(text, VOCAB.fix_keywords)) fix("resolution_category", "none", "note does not say what fixed it");
   }
 
   // Safety: decided by explicit keywords in the note, not by the model.
@@ -72,7 +79,7 @@ export function downtimeBucket(minutes) {
 }
 
 /** Build the shareable fingerprint. Only allowlisted values can make it through. */
-export function buildFingerprint(incident, siteToken) {
+export function buildFingerprint(incident, siteToken, { resolutionVerified = false } = {}) {
   const equipment = pick(incident.equipment_type, VOCAB.equipment_type);
   const fp = {
     schema_version: SCHEMA_VERSION,
@@ -83,16 +90,20 @@ export function buildFingerprint(incident, siteToken) {
     cause_category: pick(incident.cause_category, VOCAB.cause_category),
     status: pick(incident.status, VOCAB.status),
     downtime_bucket: downtimeBucket(incident.downtime_minutes),
+    resolution_category: pick(incident.resolution_category ?? "none", VOCAB.resolution_category),
+    resolution_verified: false,
     safety_flag: incident.safety_flag === true,
     site_token: siteToken,
   };
+  // An operator can only vouch for a fix that exists.
+  fp.resolution_verified = resolutionVerified === true && fp.resolution_category !== "none";
   validateFingerprint(fp);
   return fp;
 }
 
 /** Hard gate before anything leaves the device. Throws on any unexpected field or value. */
 export function validateFingerprint(fp) {
-  const allowedKeys = ["schema_version", ...ENUM_KEYS, "safety_flag", "site_token"];
+  const allowedKeys = ["schema_version", ...ENUM_KEYS, "resolution_verified", "safety_flag", "site_token"];
   for (const key of Object.keys(fp)) {
     if (!allowedKeys.includes(key)) throw new Error(`Blocked field: ${key}`);
   }
@@ -104,6 +115,8 @@ export function validateFingerprint(fp) {
     }
   }
   if (typeof fp.safety_flag !== "boolean") throw new Error("safety_flag must be boolean");
+  if (typeof fp.resolution_verified !== "boolean") throw new Error("resolution_verified must be boolean");
+  if (fp.resolution_verified && fp.resolution_category === "none") throw new Error("cannot verify a missing fix");
   if (!/^site_[a-z0-9]{8}$/.test(fp.site_token)) throw new Error("Bad site_token");
   return true;
 }

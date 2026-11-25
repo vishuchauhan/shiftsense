@@ -64,9 +64,13 @@ export function describeCluster(members) {
       safety_flags: members.filter((m) => m.safety_flag).length,
       est_downtime_min: members.reduce((t, m) => t + (BUCKET_MIDPOINT_MIN[m.downtime_bucket] ?? 0), 0),
       confirmed_causes: count(resolved.map((m) => m.cause_category).filter((c) => c !== "unknown")),
+      // What fixed it, counted only where an operator verified the fix worked.
+      verified_fixes: count(members.filter((m) => m.resolution_verified).map((m) => m.resolution_category)),
+      unverified_fixes: members.filter((m) => m.resolution_category && m.resolution_category !== "none" && !m.resolution_verified).length,
       symptom_counts: symptomCounts,
       triggers: count(members.map((m) => m.trigger)),
     },
+    evidence: evidenceStrength(members),
     // Signature used later for offline matching of new incidents against this card.
     signature: {
       equipment_type: mode(members.map((m) => m.equipment_type)),
@@ -78,5 +82,21 @@ export function describeCluster(members) {
         .sort(),
     },
     members,
+  };
+}
+
+/** Transparent evidence strength instead of an AI "confidence" label. */
+export function evidenceStrength(members) {
+  const n = members.length;
+  const causes = count(members.map((m) => m.cause_category).filter((c) => c !== "unknown"));
+  const [topCause, topN] = Object.entries(causes).sort((a, b) => b[1] - a[1])[0] || ["none", 0];
+  const verifiedFixes = members.filter((m) => m.resolution_verified).length;
+  const share = n ? topN / n : 0;
+  return {
+    top_cause: topCause,
+    top_cause_count: topN,
+    incidents: n,
+    verified_fixes: verifiedFixes,
+    level: share >= 0.6 && verifiedFixes >= 3 ? "strong" : share >= 0.3 ? "moderate" : "weak",
   };
 }

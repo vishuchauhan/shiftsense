@@ -1,7 +1,25 @@
 {
-  "schema_version": "1.0",
-  "equipment_type": ["hydraulic_press", "cnc_machine", "conveyor", "compressor", "welding_robot", "injection_molder", "paint_line", "other"],
-  "process": ["stamping", "machining", "material_handling", "utilities", "welding", "molding", "painting", "other"],
+  "schema_version": "1.1",
+  "equipment_type": [
+    "hydraulic_press",
+    "cnc_machine",
+    "conveyor",
+    "compressor",
+    "welding_robot",
+    "injection_molder",
+    "paint_line",
+    "other"
+  ],
+  "process": [
+    "stamping",
+    "machining",
+    "material_handling",
+    "utilities",
+    "welding",
+    "molding",
+    "painting",
+    "other"
+  ],
   "equipment_process": {
     "hydraulic_press": "stamping",
     "cnc_machine": "machining",
@@ -12,11 +30,115 @@
     "paint_line": "painting",
     "other": "other"
   },
-  "symptoms": ["vibration", "pressure_drop", "overheating", "abnormal_noise", "leak", "misalignment", "electrical_fault", "sensor_fault", "jam", "quality_defect", "other"],
-  "trigger": ["die_change", "changeover", "startup", "after_maintenance", "load_increase", "none_observed", "unknown"],
-  "cause_category": ["hydraulic", "mechanical", "electrical", "tooling", "material", "process_setting", "unknown"],
-  "status": ["resolved", "unresolved", "monitoring"],
-  "downtime_bucket": ["none", "under_15m", "15_60m", "1_4h", "over_4h"],
-  "safety_keywords": ["injur", "hurt", "near miss", "near-miss", "fire", "smoke", "shock", "burn", "guard removed", "guard off", "unsafe", "danger", "first aid", "evacuat"],
-  "cause_confirmation_keywords": ["root cause", "caused by", "cause was", "found that", "found a", "found the", "traced to", "due to", "confirmed", "replaced", "fixed by", "turned out"]
+  "symptoms": [
+    "vibration",
+    "pressure_drop",
+    "overheating",
+    "abnormal_noise",
+    "leak",
+    "misalignment",
+    "electrical_fault",
+    "sensor_fault",
+    "jam",
+    "quality_defect",
+    "other"
+  ],
+  "trigger": [
+    "die_change",
+    "changeover",
+    "startup",
+    "after_maintenance",
+    "load_increase",
+    "none_observed",
+    "unknown"
+  ],
+  "cause_category": [
+    "hydraulic",
+    "mechanical",
+    "electrical",
+    "tooling",
+    "material",
+    "process_setting",
+    "unknown"
+  ],
+  "status": [
+    "resolved",
+    "unresolved",
+    "monitoring"
+  ],
+  "downtime_bucket": [
+    "none",
+    "under_15m",
+    "15_60m",
+    "1_4h",
+    "over_4h"
+  ],
+  "safety_keywords": [
+    "injur",
+    "hurt",
+    "near miss",
+    "near-miss",
+    "fire",
+    "smoke",
+    "shock",
+    "burn",
+    "guard removed",
+    "guard off",
+    "unsafe",
+    "danger",
+    "first aid",
+    "evacuat"
+  ],
+  "cause_confirmation_keywords": [
+    "root cause",
+    "caused by",
+    "cause was",
+    "found that",
+    "found a",
+    "found the",
+    "traced to",
+    "due to",
+    "confirmed",
+    "replaced",
+    "fixed by",
+    "turned out"
+  ],
+  "resolution_category": [
+    "none",
+    "coupling_reseated",
+    "seal_replaced",
+    "fluid_topped_up_or_changed",
+    "filter_replaced",
+    "belt_adjusted_or_replaced",
+    "bearing_replaced",
+    "sensor_recalibrated",
+    "wiring_or_connector_repaired",
+    "parameter_adjusted",
+    "cooling_restored",
+    "jam_cleared",
+    "component_replaced_other",
+    "other"
+  ],
+  "fix_keywords": [
+    "replaced",
+    "replace",
+    "fixed",
+    "adjusted",
+    "tightened",
+    "tensioned",
+    "reseated",
+    "re-seated",
+    "recalibrated",
+    "calibrated",
+    "cleaned",
+    "cleared",
+    "repaired",
+    "changed",
+    "topped up",
+    "refilled",
+    "reset",
+    "realigned",
+    "swapped",
+    "lubricated"
+  ]
 }

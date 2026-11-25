@@ -3,6 +3,8 @@ import { isValidShared } from "./privacy.js";
 import { clusterFingerprints } from "./clustering.js";
 import { generateCard, saveCard, watchCards, cloudPayload, cardId } from "./knowledge.js";
 import { seedDemoNetwork, DEMO_SITES } from "./seed.js";
+import { loadTelemetry } from "./ai.js";
+import { economics } from "./economics.js";
 
 
 // ---- Show any error on screen (debug aid) ----
@@ -18,6 +20,14 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const nice = (s) => esc(String(s).replace(/_/g, " "));
 const trig = (t) => (String(t).startsWith("after_") ? nice(t) : ["unknown", "none_observed"].includes(t) ? "no clear trigger" : "after " + nice(t));
 const idLabel = (id) => (/^FP-\d+$/.test(id) ? id : "LIVE-" + String(id).slice(0, 4));
+const fixesText = (s) => {
+  const e = Object.entries(s.verified_fixes || {}).sort((a, b) => b[1] - a[1]);
+  const txt = e.map(([f, n]) => `${nice(f)} (${n})`).join(", ") || "no verified fix yet";
+  return txt + (s.unverified_fixes ? ` <span class="muted">· ${s.unverified_fixes} unverified</span>` : "");
+};
+const evidenceText = (e) => e
+  ? `<span class="ev ${e.level}">${e.level}</span> ${e.top_cause_count} of ${e.incidents} incidents have a confirmed ${nice(e.top_cause)} cause · ${e.verified_fixes} verified fixes`
+  : "n/a";
 const siteName = (t) => DEMO_SITES[t] ?? `Site ${String(t).slice(5, 9)}`;
 
 // ---- Network pill ----
@@ -105,7 +115,10 @@ $("cards").onclick = async () => {
   $("cards").disabled = false;
 };
 
+let latestCards = [];
 watchCards((cards) => {
+  latestCards = cards;
+  renderEconomics();
   if (!cards.length) return;
   $("cardsList").innerHTML = cards
     .sort((a, b) => b.stats.incidents - a.stats.incidents)
@@ -126,9 +139,11 @@ watchCards((cards) => {
         </div>
         <p>${esc(k.pattern_summary)}</p>
         <p class="small"><b>Confirmed causes (from data):</b> ${causes}</p>
-        <p class="small"><b>Likely mechanism (AI hypothesis):</b> ${esc(k.likely_mechanism)} <span class="muted">· confidence ${esc(k.confidence)}</span></p>
+        <p class="small"><b>What fixed it (operator-verified):</b> ${fixesText(s)}</p>
+        <p class="small"><b>Evidence strength (computed):</b> ${evidenceText(k.evidence)}</p>
+        <p class="small"><b>Likely mechanism:</b> ${esc(k.likely_mechanism)} <span class="tag">AI hypothesis · not confirmed by evidence</span></p>
         <div class="two">
-          <div><b class="small">Check first (AI suggestion)</b><ol>${(k.suggested_first_checks || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ol></div>
+          <div><b class="small">Check first (AI suggestion · qualified personnel, lockout/tagout)</b><ol>${(k.suggested_first_checks || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ol></div>
           <div><b class="small">Open questions</b><ul>${(k.open_questions || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
         </div>
         <div class="chips"><span class="muted small">Evidence:</span>${(k.cited_ids || []).map((id) => `<span class="chip ok" title="${esc(id)}">${esc(idLabel(id))}</span>`).join("")}
@@ -137,3 +152,50 @@ watchCards((cards) => {
     })
     .join("");
 });
+
+// ---- Economics ----
+const money = (n) => "$" + Math.round(n).toLocaleString();
+function renderEconomics() {
+  const verified = latestCards.filter((k) => k.verification?.status === "verified");
+  if (!verified.length) return;
+  const rows = economics(verified, { costPerMin: Number($("costMin").value) || 0, reductionPct: Number($("reduction").value) || 0 });
+  $("economics").innerHTML = `<table class="tbl"><thead><tr>
+      <th>#</th><th>Pattern</th><th>Incidents</th><th>Open</th><th>Est. downtime</th><th>Repeat-failure cost</th><th>Avoidable if fixed</th></tr></thead><tbody>
+    ${rows.map((r, i) => `<tr><td>${i + 1}</td><td><b>${esc(r.title)}</b><div class="muted small">${esc(r.id)}</div></td>
+      <td>${r.incidents}</td><td>${r.open}</td><td>${r.downtimeMin.toLocaleString()} min</td>
+      <td>${money(r.cost)}</td><td><b>${money(r.avoidable)}</b></td></tr>`).join("")}
+    <tr class="total"><td></td><td>Total across patterns</td><td>${rows.reduce((t, r) => t + r.incidents, 0)}</td><td>${rows.reduce((t, r) => t + r.open, 0)}</td>
+      <td>${rows.reduce((t, r) => t + r.downtimeMin, 0).toLocaleString()} min</td><td>${money(rows.reduce((t, r) => t + r.cost, 0))}</td>
+      <td><b>${money(rows.reduce((t, r) => t + r.avoidable, 0))}</b></td></tr></tbody></table>`;
+}
+$("costMin").oninput = renderEconomics;
+$("reduction").oninput = renderEconomics;
+
+// ---- Hybrid audit ----
+const median = (a) => { if (!a.length) return null; const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
+function renderAudit() {
+  const t = loadTelemetry();
+  const local = t.filter((e) => e.source === "ON_DEVICE");
+  const cloud = t.filter((e) => e.source !== "ON_DEVICE");
+  const rawToCloud = cloud.filter((e) => e.input === "raw_note").length;
+  const byTask = {};
+  for (const e of t) {
+    const k = `${e.task}|${e.source}|${e.input || "?"}`;
+    (byTask[k] ||= []).push(e.ms);
+  }
+  $("audit").innerHTML = `
+    <div class="kstats">
+      <div><b>${local.length}</b><span>on-device calls</span></div>
+      <div><b>${cloud.length}</b><span>cloud calls</span></div>
+      <div><b>${t.length ? Math.round((100 * local.length) / t.length) : 0}%</b><span>handled on-device</span></div>
+      <div class="${rawToCloud ? "bad" : "good"}"><b>${rawToCloud}</b><span>raw notes sent to cloud</span></div>
+    </div>
+    <table class="tbl"><thead><tr><th>Task</th><th>Where it ran</th><th>Data it carried</th><th>Calls</th><th>Median latency</th></tr></thead><tbody>
+    ${Object.entries(byTask).map(([k, ms]) => { const [task, src, input] = k.split("|");
+      return `<tr><td>${esc(task)}</td><td>${src === "ON_DEVICE" ? "⚡ on-device" : "☁️ cloud"}</td>
+      <td>${input === "raw_note" ? "🔒 private note" : "🌐 fingerprints only"}</td><td>${ms.length}</td><td>${(median(ms) / 1000).toFixed(1)} s</td></tr>`; }).join("")}
+    </tbody></table>`;
+}
+renderAudit();
+addEventListener("ss-telemetry", renderAudit);
+addEventListener("storage", (e) => e.key === "ss_telemetry" && renderAudit());

@@ -7,7 +7,7 @@
  "incidents": [
   {
    "family": "noise",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "cnc_machine",
    "process": "machining",
    "symptoms": [
@@ -20,11 +20,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-001"
+   "id": "FP-001",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -38,11 +40,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-002"
+   "id": "FP-002",
+   "resolution_category": "seal_replaced",
+   "resolution_verified": false
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -54,11 +58,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-003"
+   "id": "FP-003",
+   "resolution_category": "bearing_replaced",
+   "resolution_verified": true
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -71,11 +77,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-004"
+   "id": "FP-004",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -88,11 +96,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-005"
+   "id": "FP-005",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -105,11 +115,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-006"
+   "id": "FP-006",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -123,11 +135,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-007"
+   "id": "FP-007",
+   "resolution_category": "seal_replaced",
+   "resolution_verified": true
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -140,11 +154,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-008"
+   "id": "FP-008",
+   "resolution_category": "sensor_recalibrated",
+   "resolution_verified": true
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -157,11 +173,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-009"
+   "id": "FP-009",
+   "resolution_category": "belt_adjusted_or_replaced",
+   "resolution_verified": true
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -174,11 +192,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-010"
+   "id": "FP-010",
+   "resolution_category": "coupling_reseated",
+   "resolution_verified": true
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -190,11 +210,13 @@
    "downtime_bucket": "under_15m",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-011"
+   "id": "FP-011",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "noise",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "cnc_machine",
    "process": "machining",
    "symptoms": [
@@ -207,11 +229,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-012"
+   "id": "FP-012",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -225,11 +249,13 @@
    "downtime_bucket": "over_4h",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-013"
+   "id": "FP-013",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -242,11 +268,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-014"
+   "id": "FP-014",
+   "resolution_category": "jam_cleared",
+   "resolution_verified": true
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -259,11 +287,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-015"
+   "id": "FP-015",
+   "resolution_category": "fluid_topped_up_or_changed",
+   "resolution_verified": true
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -276,11 +306,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-016"
+   "id": "FP-016",
+   "resolution_category": "jam_cleared",
+   "resolution_verified": false
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -293,11 +325,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-017"
+   "id": "FP-017",
+   "resolution_category": "parameter_adjusted",
+   "resolution_verified": true
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -310,11 +344,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-018"
+   "id": "FP-018",
+   "resolution_category": "jam_cleared",
+   "resolution_verified": true
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -327,11 +363,13 @@
    "downtime_bucket": "over_4h",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-019"
+   "id": "FP-019",
+   "resolution_category": "cooling_restored",
+   "resolution_verified": true
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -344,11 +382,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-020"
+   "id": "FP-020",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -360,11 +400,13 @@
    "downtime_bucket": "under_15m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-021"
+   "id": "FP-021",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -377,11 +419,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-022"
+   "id": "FP-022",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -395,11 +439,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-023"
+   "id": "FP-023",
+   "resolution_category": "seal_replaced",
+   "resolution_verified": true
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -412,11 +458,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-024"
+   "id": "FP-024",
+   "resolution_category": "coupling_reseated",
+   "resolution_verified": true
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -430,11 +478,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-025"
+   "id": "FP-025",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -447,11 +497,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-026"
+   "id": "FP-026",
+   "resolution_category": "parameter_adjusted",
+   "resolution_verified": true
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -464,11 +516,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-027"
+   "id": "FP-027",
+   "resolution_category": "sensor_recalibrated",
+   "resolution_verified": true
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -481,11 +535,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-028"
+   "id": "FP-028",
+   "resolution_category": "seal_replaced",
+   "resolution_verified": true
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -497,11 +553,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-029"
+   "id": "FP-029",
+   "resolution_category": "wiring_or_connector_repaired",
+   "resolution_verified": true
   },
   {
    "family": "F4_molder_load_overheat",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "injection_molder",
    "process": "molding",
    "symptoms": [
@@ -514,11 +572,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-030"
+   "id": "FP-030",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -530,11 +590,13 @@
    "downtime_bucket": "under_15m",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-031"
+   "id": "FP-031",
+   "resolution_category": "bearing_replaced",
+   "resolution_verified": true
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -547,11 +609,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": true,
    "site_token": "site_plantnth",
-   "id": "FP-032"
+   "id": "FP-032",
+   "resolution_category": "wiring_or_connector_repaired",
+   "resolution_verified": true
   },
   {
    "family": "noise",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "compressor",
    "process": "utilities",
    "symptoms": [
@@ -564,11 +628,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-033"
+   "id": "FP-033",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -581,11 +647,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-034"
+   "id": "FP-034",
+   "resolution_category": "belt_adjusted_or_replaced",
+   "resolution_verified": true
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -598,11 +666,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-035"
+   "id": "FP-035",
+   "resolution_category": "wiring_or_connector_repaired",
+   "resolution_verified": true
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -616,11 +686,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-036"
+   "id": "FP-036",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "noise",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -633,11 +705,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-037"
+   "id": "FP-037",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F2_conveyor_startup_jam",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "conveyor",
    "process": "material_handling",
    "symptoms": [
@@ -650,11 +724,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-038"
+   "id": "FP-038",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -667,11 +743,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-039"
+   "id": "FP-039",
+   "resolution_category": "wiring_or_connector_repaired",
+   "resolution_verified": true
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -685,11 +763,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-040"
+   "id": "FP-040",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F1_press_changeover_pressure",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "hydraulic_press",
    "process": "stamping",
    "symptoms": [
@@ -702,11 +782,13 @@
    "downtime_bucket": "15_60m",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-041"
+   "id": "FP-041",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "noise",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "compressor",
    "process": "utilities",
    "symptoms": [
@@ -719,11 +801,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-042"
+   "id": "FP-042",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -735,11 +819,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantnth",
-   "id": "FP-043"
+   "id": "FP-043",
+   "resolution_category": "wiring_or_connector_repaired",
+   "resolution_verified": true
   },
   {
    "family": "noise",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "paint_line",
    "process": "painting",
    "symptoms": [
@@ -752,11 +838,13 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantsth",
-   "id": "FP-044"
+   "id": "FP-044",
+   "resolution_category": "none",
+   "resolution_verified": false
   },
   {
    "family": "F3_welder_post_maintenance_sensor",
-   "schema_version": "1.0",
+   "schema_version": "1.1",
    "equipment_type": "welding_robot",
    "process": "welding",
    "symptoms": [
@@ -769,7 +857,9 @@
    "downtime_bucket": "1_4h",
    "safety_flag": false,
    "site_token": "site_plantwst",
-   "id": "FP-045"
+   "id": "FP-045",
+   "resolution_category": "wiring_or_connector_repaired",
+   "resolution_verified": true
   }
  ]
 }

@@ -39,6 +39,21 @@
     </section>
 
     <section class="card">
+      <h2>Where to act first <span class="muted small">(plain arithmetic, no AI · your cost figures stay in this browser)</span></h2>
+      <div class="row inputs">
+        <label>Cost of 1 minute of downtime ($) <input id="costMin" type="number" min="0" value="150" /></label>
+        <label>Hypothetical reduction if the pattern is fixed (%) <input id="reduction" type="number" min="0" max="100" value="50" /></label>
+      </div>
+      <div id="economics"><p class="muted">Write knowledge cards first.</p></div>
+      <p class="muted small">Downtime is estimated from fingerprint downtime bands (band midpoints). These are scenario estimates, not verified savings.</p>
+    </section>
+
+    <section class="card">
+      <h2>Hybrid inference audit <span class="muted small">(measured from real SDK calls in this browser)</span></h2>
+      <div id="audit"></div>
+    </section>
+
+    <section class="card">
       <h2>Inference log</h2>
       <ul id="log"></ul>
     </section>

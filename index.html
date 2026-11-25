@@ -48,13 +48,21 @@
           <pre id="fingerprint"></pre>
         </div>
       </div>
+      <label id="fixRow" class="fixrow hidden"><input type="checkbox" id="fixVerified" /> I confirm the fix (<b id="fixLabel"></b>) worked. Other plants will see it as a verified fix.</label>
       <button id="approve">Approve & share fingerprint</button>
       <span id="shareStatus" class="muted"></span>
     </section>
 
     <section class="card hidden" id="matchesCard">
-      <h2>4 · Similar incidents across plants <span class="muted small">(matched on-device, no AI, works offline)</span></h2>
+      <h2>4 · Similar incidents across plants <span class="muted small">(feature similarity, not proof of the same cause · matched on-device, no AI, works offline)</span></h2>
       <div id="matches"></div>
+    </section>
+
+    <section class="card hidden" id="knownCard">
+      <h2>5 · Known pattern from the network <span class="muted small">(<span id="cardInfo">0 knowledge cards</span> · matched on-device, works offline)</span></h2>
+      <div id="known"></div>
+      <button id="tailor" class="ghost hidden">Tailor this to my note (on-device, private)</button>
+      <p id="advice" class="advice"></p>
     </section>
 
     <section class="card">

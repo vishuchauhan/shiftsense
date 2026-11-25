@@ -14,7 +14,6 @@ const cardSchema = Schema.object({
     suggested_first_checks: Schema.array({ items: Schema.string() }),
     open_questions: Schema.array({ items: Schema.string() }),
     evidence_ids: Schema.array({ items: Schema.string() }),
-    confidence: Schema.enumString({ enum: ["low", "medium", "high"] }),
   },
 });
 
@@ -40,6 +39,8 @@ export function cloudPayload(cluster) {
       status: m.status,
       confirmed_cause: m.cause_category,
       downtime: m.downtime_bucket,
+      fix: m.resolution_category,
+      fix_verified: m.resolution_verified,
       safety_flag: m.safety_flag,
     })),
   };
@@ -56,7 +57,8 @@ Rules:
 - likely_mechanism is a hypothesis. Say so if causes are mostly unconfirmed.
 - suggested_first_checks: 3 short, practical checks a technician can do first.
 - open_questions: 2 questions an engineer should answer to confirm the root cause.
-- confidence: high only if most incidents have the same confirmed cause.
+- Fixes: only fixes with fix_verified true are proven. Mention the most common verified fix in pattern_summary if there is one.
+- suggested_first_checks should start with the check related to the most common verified fix, if any.
 - Keep title under 8 words and pattern_summary under 40 words.
 
 DATA:
@@ -96,7 +98,7 @@ export async function saveCard(cluster, card) {
     likely_mechanism: card.likely_mechanism,
     suggested_first_checks: card.suggested_first_checks,
     open_questions: card.open_questions,
-    confidence: card.confidence,
+    evidence: cluster.evidence,
     cited_ids: card.evidence_ids,
     all_evidence_ids: cluster.evidence_ids,
     verification: card.verification,
